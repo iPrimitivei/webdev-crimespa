@@ -186,48 +186,48 @@ onMounted(() => {
     </dialog>
 
     <!-- Location Input -->
-    <div class="location-input">
-        <input type="text" v-model="map.center.address" placeholder="Enter address or lat,lng" @keyup.enter="goToLocation" />
-        <button @click="goToLocation">Go</button>
-    </div>
+  <div class="location-input">
+    <input type="text" v-model="map.center.address" placeholder="Enter address or lat,lng" @keyup.enter="goToLocation" />
+    <button type="button" class="button" @click="goToLocation">Go</button>
+  </div>
 
-    <!-- Map -->
-    <div id="leafletmap"></div>
+  <!-- Map -->
+  <div id="leafletmap"></div>
 
-    <!-- Crimes Table -->
-    <h3>Visible Crimes</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Neighborhood</th>
-                <th>Incident</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="c in crimes" :key="c.case_number">
-                <td>{{ c.date }}</td>
-                <td>{{ c.time }}</td>
-                <td>{{ c.neighborhood_number }}</td>
-                <td>{{ c.incident }}</td>
-            </tr>
-        </tbody>
-    </table>
+  <!-- Crimes Table -->
+  <h3>Visible Crimes</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Neighborhood</th>
+        <th>Incident</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="c in crimes" :key="c.case_number">
+        <td>{{ c.date }}</td>
+        <td>{{ c.time }}</td>
+        <td>{{ c.neighborhood_number }}</td>
+        <td>{{ c.incident }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-    <!-- New Incident Form -->
-    <h3>Add New Crime</h3>
-    <form @submit.prevent="submitIncident">
-        <input v-model="newIncident.case_number" placeholder="Case Number" required />
-        <input v-model="newIncident.date_time" type="datetime-local" required />
-        <input v-model="newIncident.code" placeholder="Code" required />
-        <input v-model="newIncident.incident" placeholder="Incident" required />
-        <input v-model="newIncident.police_grid" placeholder="Police Grid" required />
-        <input v-model="newIncident.neighborhood_number" placeholder="Neighborhood #" required />
-        <input v-model="newIncident.block" placeholder="Block" required />
-        <button type="submit">Submit</button>
-    </form>
-    <p v-if="incidentError" style="color:red">{{ incidentError }}</p>
+  <!-- New Incident Form -->
+  <h3>Add New Crime</h3>
+  <form @submit.prevent="submitIncident" class="incident-form">
+    <input v-model="newIncident.case_number" placeholder="Case Number" required />
+    <input v-model="newIncident.date_time" type="datetime-local" required />
+    <input v-model="newIncident.code" placeholder="Code" required />
+    <input v-model="newIncident.incident" placeholder="Incident" required />
+    <input v-model="newIncident.police_grid" placeholder="Police Grid" required />
+    <input v-model="newIncident.neighborhood_number" placeholder="Neighborhood #" required />
+    <input v-model="newIncident.block" placeholder="Block" required />
+    <button type="submit" class="button">Submit</button>
+  </form>
+  <p v-if="incidentError" class="error-text">{{ incidentError }}</p>
 </template>
 
 <style scoped>
