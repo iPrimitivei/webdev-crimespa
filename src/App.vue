@@ -179,6 +179,8 @@ let newIncident = reactive({
     block: ''
 });
 let incidentError = ref('');
+let selectedCrimeMarker = ref(null);
+let selectedCrimeCaseNumber = ref(null);
 
 // --- FUNCTIONS ---
 function closeDialog() {
@@ -334,12 +336,151 @@ async function deleteIncident(caseNumber) {
 
     // Remove from UI
     crimes.value = crimes.value.filter(c => c.case_number !== caseNumber);
+    
+    // Remove marker if it's the selected crime
+    if (selectedCrimeMarker.value && selectedCrimeCaseNumber.value === caseNumber) {
+      map.leaflet.removeLayer(selectedCrimeMarker.value);
+      selectedCrimeMarker.value = null;
+      selectedCrimeCaseNumber.value = null;
+    }
 
   } catch (err) {
     console.error(err);
     alert('Failed to delete incident');
   }
 }
+
+function getCrimeCategory(code) {
+  const codeNum = parseInt(code);
+  
+  // violent crimes (crimes against another person) - Red
+  if (
+    (codeNum >= 100 && codeNum <= 120) ||  // homicide
+    (codeNum >= 210 && codeNum <= 220) ||  // Sexual Assault
+    (codeNum >= 300 && codeNum <= 374) ||  // Robbery
+    (codeNum >= 400 && codeNum <= 453) ||  // Aggravated Assault
+    codeNum === 810 || codeNum === 861 || codeNum === 862 || codeNum === 863  // Domestic Assault
+  ) {
+    return 'violent';
+  }
+  
+  // Property crimes (crimes against property) - Blue
+  if (
+    (codeNum >= 500 && codeNum <= 566) ||  // Burglary
+    (codeNum >= 600 && codeNum <= 693) ||  // Theft
+    (codeNum >= 700 && codeNum <= 732) ||  // Motor Vehicle Theft
+    (codeNum >= 900 && codeNum <= 982) ||  // Arson
+    (codeNum >= 1400 && codeNum <= 1436)   // Criminal Damage/Graffiti
+  ) {
+    return 'property';
+  }
+  
+  // Other crimes - Green
+  return 'other';
+}
+
+// Normalize address: replace X in address numbers with 0, but not X in street names
+function normalizeAddress(address) {
+  if (!address) return '';
+  
+  // Match address number at the start (digits followed by one or more X's, then space or end)
+  // Replace all X's in the number part with 0
+  // Example: "98X UNIVERSITY AV W" -> "980 UNIVERSITY AV W"
+  // Example: "9XX MAIN ST" -> "900 MAIN ST"
+  let normalized = address.replace(/^(\d+)(X+)(\s|$)/, (match, digits, xChars, spaceOrEnd) => {
+    return digits + '0'.repeat(xChars.length) + spaceOrEnd;
+  });
+  
+  // Add space after MISSISSIPPI if it's followed by a word (e.g., MISSISSIPPIRIVER -> MISSISSIPPI RIVER)
+  normalized = normalized.replace(/MISSISSIPPI([A-Z])/gi, 'MISSISSIPPI $1');
+  
+  console.log('Address normalization:', address, '->', normalized);
+  return normalized;
+}
+
+// Create custom icon for crime markers (red pin)
+function createCrimeIcon() {
+  return L.divIcon({
+    className: 'crime-marker-icon',
+    html: '<div style="background-color: #ff0000; width: 20px; height: 20px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 20],
+    popupAnchor: [0, -20]
+  });
+}
+
+async function selectCrime(crime) {
+  if (!crime.block) {
+    alert('No address available for this crime');
+    return;
+  }
+
+  // Remove previous marker if exists
+  if (selectedCrimeMarker.value) {
+    map.leaflet.removeLayer(selectedCrimeMarker.value);
+    selectedCrimeMarker.value = null;
+    selectedCrimeCaseNumber.value = null;
+  }
+
+  // Normalize address (replace X in numbers with 0)
+  const normalizedAddress = normalizeAddress(crime.block);
+  console.log('Normalized address:', normalizedAddress);
+  
+  // Get neighborhood name for fallback
+  const neighborhoodName = neighborhoodMap.value[crime.neighborhood_number] || '';
+
+  try {
+    // Try geocoding with address + state/city first
+    const searchAddress = `${normalizedAddress}, St. Paul, Minnesota`;
+    const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchAddress)}&limit=1`;
+    console.log('Geocoding URL:', geocodeUrl);
+    const res = await fetch(geocodeUrl);
+    const data = await res.json();
+    console.log('Geocoding response:', data);
+    
+    if (data && data.length > 0) {
+      const lat = parseFloat(data[0].lat);
+      const lng = parseFloat(data[0].lon);
+      console.log('Using coordinates:', lat, lng);
+      
+      // Create marker with custom icon
+      const marker = L.marker([lat, lng], { icon: createCrimeIcon() }).addTo(map.leaflet);
+      
+      // Create popup content with date, time, incident, and delete button
+      const popupDiv = document.createElement('div');
+      popupDiv.style.minWidth = '200px';
+      popupDiv.innerHTML = `
+        <strong>Case: ${crime.case_number}</strong><br/>
+        <strong>Date:</strong> ${crime.date || 'N/A'}<br/>
+        <strong>Time:</strong> ${crime.time || 'N/A'}<br/>
+        <strong>Incident:</strong> ${codeMap.value[crime.code] || 'N/A'}<br/>
+        <strong>Address:</strong> ${crime.block}<br/>
+        <button class="button alert small" id="delete-crime-${crime.case_number}" style="margin-top: 8px; width: 100%;">Delete</button>
+      `;
+      
+      // Add event listener for delete button
+      const deleteBtn = popupDiv.querySelector(`#delete-crime-${crime.case_number}`);
+      deleteBtn.addEventListener('click', async () => {
+        await deleteIncident(crime.case_number);
+      });
+      
+      marker.bindPopup(popupDiv).openPopup();
+      
+      // Center map on marker
+      map.leaflet.setView([lat, lng], Math.max(map.leaflet.getZoom(), 15));
+      
+      selectedCrimeMarker.value = marker;
+      selectedCrimeCaseNumber.value = crime.case_number;
+    } else {
+      console.warn('Could not geocode address:', normalizedAddress);
+      alert('Could not find location for this address: ' + crime.block);
+    }
+  } catch (err) {
+    console.error('Geocoding error:', err);
+    alert('Failed to geocode address: ' + err.message);
+  }
+}
+
 
 
 
@@ -474,6 +615,26 @@ onMounted(() => {
 
       <!-- Table -->
       <h3>Visible Crimes</h3>
+      
+      <!-- Legend -->
+      <div class="crime-legend">
+        <h4>Crime Categories</h4>
+        <div class="legend-items">
+          <div class="legend-item">
+            <span class="legend-color violent"></span>
+            <span>Violent Crimes (Crimes Against Person)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color property"></span>
+            <span>Property Crimes (Crimes Against Property)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color other"></span>
+            <span>Other Crimes</span>
+          </div>
+        </div>
+      </div>
+      
       <table>
         <thead>
           <tr>
@@ -484,12 +645,12 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="c in crimes" :key="c.case_number">
+          <tr v-for="c in crimes" :key="c.case_number" :class="`crime-${getCrimeCategory(c.code)}`" @click="selectCrime(c)" style="cursor: pointer;">
             <td>{{ c.date }}</td>
             <td>{{ c.time }}</td>
             <td>{{ neighborhoodMap[c.neighborhood_number] }}</td>
             <td>{{ codeMap[c.code] }}</td>
-            <td><button class="button alert small" @click="deleteIncident(c.case_number)"> Delete</button></td>
+            <td><button class="button alert small" @click.stop="deleteIncident(c.case_number)"> Delete</button></td>
           </tr>
         </tbody>
       </table>
@@ -511,7 +672,6 @@ onMounted(() => {
 
 </template>
 
-
 <style scoped>
 #rest-dialog { width: 20rem; margin-top: 1rem; z-index: 1000; }
 #leafletmap { height: 500px; margin: 1rem 0; }
@@ -525,4 +685,81 @@ onMounted(() => {
 table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
 table, th, td { border: 1px solid #ccc; }
 th, td { padding: 0.3rem; text-align: left; }
+
+/* Crime category row colors */
+.crime-violent {
+  background-color: #f09da9; /* Light red shade */
+}
+.crime-violent:hover {
+  background-color: #ff808d; /* Slightly darker red on hover */
+}
+
+.crime-property {
+  background-color: #bfe4ff; /* Light blue shade */
+}
+.crime-property:hover {
+  background-color: #8ccbff; /* Slightly darker blue on hover */
+}
+
+.crime-other {
+  background-color: #85f68e; /* Light green shade */
+}
+.crime-other:hover {
+  background-color: #cafacc; /* Slightly darker green on hover */
+}
+
+/* Make table rows look clickable */
+tbody tr {
+  transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+  opacity: 0.9;
+}
+
+/* Legend styling */
+.crime-legend {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.crime-legend h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.legend-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-color {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+
+.legend-color.violent {
+  background-color: #f09da9;
+}
+
+.legend-color.property {
+  background-color: #bfe4ff;
+}
+
+.legend-color.other {
+  background-color: #85f68e;
+}
 </style>
