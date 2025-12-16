@@ -697,7 +697,7 @@ onMounted(() => {
     <!-- Alex -->
     <div class="cell medium-4">
       <div class="card team-card">
-        <img src="/img/AlexWodarski.jpg" alt="Alex Wodarski" class="team-img" />
+        <img src="/img/Alex-Wodarski.jpg" alt="Alex Wodarski" class="team-img" />
         <div class="card-section">
           <h4>Alex Wodarski</h4>
           <p>
@@ -768,6 +768,24 @@ onMounted(() => {
             The application uses REST API to send get, put and delete requests to fetch, insert, filter and remove crime to our tables and to the map. 
           </p>
           <p>We also used Foundation for the user interface layout and styling as well.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-x grid-margin-x align-center about-section">
+    <div class="cell medium-12">
+      <div class="card team-card">
+        <div class="card-section">
+          <h3>Interesting Findings</h3>
+          <ul>
+            <li>There have been only two homicides in the Summit Hill neighborhood in the entire database, one in 2020 and the other in 2021.</li>
+            <li>Summit Hill is the only neighborhood with less than 500 Motor Vehicle Theft incidents, the lowest by far. </li>
+            <li>The Payne/Phalen neighborhood had the most amount of rapes among neighborhoods. </li>
+            <li>An arson incident at 199X SUBURBAN AV in the Conway/Battlecreek/Highwood neighborhood on 05/29/2020 is suspected by us to be the Dollar General that burned down during the George Floyd protests. </li>
+            <li>We found only one case of arson between New Year's Eve and New Year's Day. It was 2021 in Dayton's Bluff.</li>
+            <li>There were 31 Property Crime incidents on Huter's Birthday in the year of 2024.</li>
+          </ul>
         </div>
       </div>
     </div>
