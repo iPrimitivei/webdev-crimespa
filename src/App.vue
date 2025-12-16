@@ -718,11 +718,9 @@ develop efficient solutions, eager to contribute to innovative projects and cont
           <h4>Hunter Heffernan</h4>
           <p>
           A fourth-year Computer Science undergraduate student at the University of St. Thomas with minors in Data Science and Art History. 
-          I am seeking a position to apply and grow my skill set and experience.
           I am proficient in Java and Python, and have experience with SQL and C. 
           I am eager to solve problems and I love to learn. 
           I have experience with leadership roles, as well as creating and organizing goals to meet deadlines in both Agile and Waterfall environments. 
-          I am a quick learner, very task-oriented, with a strong work ethic and communication skills.
           </p>
         </div>
       </div>
