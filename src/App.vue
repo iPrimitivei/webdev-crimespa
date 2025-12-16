@@ -697,14 +697,15 @@ onMounted(() => {
     <!-- Alex -->
     <div class="cell medium-4">
       <div class="card team-card">
-        <img src="/img/Alex-Wodarski.jpg" alt="Alex Wodarski" class="team-img" />
+        <img src="/img/AlexWodarski.jpg" alt="Alex Wodarski" class="team-img" />
         <div class="card-section">
           <h4>Alex Wodarski</h4>
           <p>
-            Detail-oriented and certified entry-level programmer with a solid foundation in multiple programming languages, including Python, Java,
-and C#. Equipped with a North Hennepin Object-Oriented Programming Certificate and PCEP certification, possessing strong problem-
-solving skills and a thorough understanding of computer science principles. Passionate about leveraging programming expertise to
-develop efficient solutions, eager to contribute to innovative projects and continue growing within the technology field.
+            Detail-oriented and certified entry-level programmer with a solid foundation in multiple programming languages, including Python, Java, and C#. 
+            Equipped with a North Hennepin Object-Oriented Programming Certificate and PCEP certification, possessing strong problem
+            solving skills and a thorough understanding of computer science principles.
+            Passionate about leveraging programming expertise to develop efficient solutions, 
+            eager to contribute to innovative projects and continue growing within the technology field.
           </p>
         </div>
       </div>
@@ -733,16 +734,45 @@ develop efficient solutions, eager to contribute to innovative projects and cont
         <div class="card-section">
           <h4>Ada Huang</h4>
           <p>
-            I am a senior at the University of St. Thomas with a focus on software development.
-            In this project, I worked on designing the filter UI, implementing the data table deletion feature, 
-            and developing the About page. The application uses Vue.js and REST APIs to support interactive data. 
-            Through this project, I strengthened my understanding of component based design.
+            I am a senior at the University of St. Thomas majoring in Computer Science.
+            I enjoy problem solving, and learning new things. Java and Python are my most proficient languages.
+            However, I do also have experience in HTML, CSS, and JS.
+            I am also interested in data analytic, I have experiences in JMP, Azure, and R.
           </p>
         </div>
       </div>
     </div>
 
   </div>
+  
+  <div class="grid-x grid-margin-x align-center about-section">
+    <div class="cell medium-12">
+      <div class="card team-card">
+        <div class="card-section">
+          <h3>Tools & Technologies</h3>
+          <p>
+            This single-page application used the Vue.js framework to build user interfaces, and to handle dynamic UI changes. 
+          </p>
+          
+          <p>
+            The interactive map on the page is implemented using Leaflet.js, an open-source JavaScript library. 
+            We restricted the map to show only the St. Paul area. 
+            We populated the Leaflet map with neighborhood borders and crime markers. 
+          </p>
+          <p>
+            We used Nominatim to be able to search locations, it was also used to convert selected crime address into coordinates for the markers.
+          </p>
+          
+          <p>
+            All the data were retrieved and managed through our own REST API connected to a SQLite3 database about St.Paul crime records.
+            The application uses REST API to send get, put and delete requests to fetch, insert, filter and remove crime to our tables and to the map. 
+          </p>
+          <p>We also used Foundation for the user interface layout and styling as well.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
 </div>
 
 </template>
