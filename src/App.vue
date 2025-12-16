@@ -714,7 +714,7 @@ onMounted(() => {
     <!-- Hunter -->
     <div class="cell medium-4">
       <div class="card team-card">
-        <img src="/img/hunter.JPG" alt="Hunter Heffernan" class="team-img" />
+        <img src="/img/HunterHeffernan.png" alt="Hunter Heffernan" class="team-img" />
         <div class="card-section">
           <h4>Hunter Heffernan</h4>
           <p>
@@ -744,7 +744,7 @@ onMounted(() => {
     </div>
 
   </div>
-  
+
   <div class="grid-x grid-margin-x align-center about-section">
     <div class="cell medium-12">
       <div class="card team-card">
@@ -887,7 +887,9 @@ tbody tr:hover {
 
 .team-img {
   width: 100%;
-  height: auto;
+  height: 280px;
+  object-fit: cover;
+  object-position: center;
   border-radius: 12px 12px 0 0;
 }
 
