@@ -790,6 +790,27 @@ onMounted(() => {
       </div>
     </div>
   </div>
+
+  <!-- Project Demo Video -->
+<div class="grid-x grid-margin-x align-center about-section">
+  <div class="cell medium-12">
+    <div class="card team-card">
+      <div class="card-section">
+        <h3>Project Demo</h3>
+
+        <div class="responsive-embed widescreen">
+          <iframe
+            src="https://www.youtube.com/embed/r7ikSbeRQGE" frameborder="0" allowfullscreen>
+          </iframe>
+        </div>
+
+        <p class="text-center" style="margin-top: 0.5rem;">
+          Short walkthrough of the single page application.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
  
 </div>
 
