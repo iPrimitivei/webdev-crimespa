@@ -689,41 +689,55 @@ onMounted(() => {
     </div>
   </div>
 
-  <div v-if="currentPage === 'about'" class="grid-container" style="margin-top: 1rem;">
-  <h1>Team Members</h1>
+<div v-if="currentPage === 'about'" class="grid-container about-page">
+  <h1 class="text-center">Team Members</h1>
 
-  <div class="grid-x grid-margin-x">
+  <div class="grid-x grid-margin-x align-center">
 
+    <!-- Alex -->
     <div class="cell medium-4">
-      <div class="card">
-        <img src="/img/erm.png" alt="Alex urmom" />
+      <div class="card team-card">
+        <img src="/img/Alex-Wodarski.jpg" alt="Alex Wodarski" class="team-img" />
         <div class="card-section">
-          <h4>Alex urmom</h4>
-          <p>Tarddddd</p>
+          <h4>Alex Wodarski</h4>
+          <p>
+            Detail-oriented and certified entry-level programmer with a solid foundation in multiple programming languages, including Python, Java,
+and C#. Equipped with a North Hennepin Object-Oriented Programming Certificate and PCEP certification, possessing strong problem-
+solving skills and a thorough understanding of computer science principles. Passionate about leveraging programming expertise to
+develop efficient solutions, eager to contribute to innovative projects and continue growing within the technology field.
+          </p>
         </div>
       </div>
     </div>
 
+    <!-- Hunter -->
     <div class="cell medium-4">
-      <div class="card">
-        <img src="..." alt="Alex urmom" />
+      <div class="card team-card">
+        <img src="..." alt="Hunter Heffernan" class="team-img" />
         <div class="card-section">
-          <h4>Hunter Heffy</h4>
-          <p>RRRRRRRRRRRR</p>
+          <h4>Hunter Heffernan</h4>
+          <p>
+          bio here
+          </p>
         </div>
       </div>
     </div>
 
+    <!-- Ada -->
     <div class="cell medium-4">
-      <div class="card">
-        <img src="..." alt="Alex urmom" />
+      <div class="card team-card">
+        <img src="/img/AdaHuang.jpg" alt="Ada Huang" class="team-img" />
         <div class="card-section">
-          <h4>Ada HWang</h4>
-          <p>Role?</p>
+          <h4>Ada Huang</h4>
+          <p>
+            I am a senior at the University of St. Thomas with a focus on software development.
+            In this project, I worked on designing the filter UI, implementing the data table deletion feature, 
+            and developing the About page. The application uses Vue.js and REST APIs to support interactive data. 
+            Through this project, I strengthened my understanding of component based design.
+          </p>
         </div>
       </div>
     </div>
-    
 
   </div>
 </div>
@@ -819,5 +833,38 @@ tbody tr:hover {
 
 .legend-color.other {
   background-color: #85f68e;
+}
+/* About Page */
+.about-page {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.about-subtitle {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Team Cards */
+.team-card {
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.team-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px 12px 0 0;
+}
+
+.team-card h4 {
+  margin-bottom: 0.25rem;
+}
+
+.role {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 0.75rem;
 }
 </style>
