@@ -3,10 +3,10 @@
     "description": "St Paul Crime Single Page Application",
     "version": "1.0.0",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Alex Wodarski",
+        "email": "woda7502@stthomas.edu"
     },
-    "contributors": [
+    "contributors": ["Hunter Heffernan", "Ada Huang"
     ],
     "repository": {},
     "type": "module",

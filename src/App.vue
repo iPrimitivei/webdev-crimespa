@@ -1,6 +1,8 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
 
+const currentPage = ref('home');
+
 // --- STATE ---
 let crime_url = ref('');
 let dialog_err = ref(false);
@@ -533,6 +535,7 @@ onMounted(() => {
 <template>
 
   <!-- API URL Dialog -->
+
   <dialog id="rest-dialog" open>
         <h1 class="dialog-header">St. Paul Crime REST API</h1>
         <label class="dialog-label">URL: </label>
@@ -542,7 +545,23 @@ onMounted(() => {
         <button class="button" type="button" @click="closeDialog">OK</button>
     </dialog>
 
-  <div class="off-canvas-wrapper">
+    <div class="top-bar">
+      <div class ="top-bar-left">
+        <ul class="menu">
+          <li>
+            <a href="#" @click.prevent="currentPage = 'home'">Home</a>
+          </li>
+          <li>
+            <a href="#" @click.prevent="currentPage = 'about'">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+  <div v-show="currentPage === 'home'" class="off-canvas-wrapper">
+
+
 
     <!-- FILTER PANEL -->
     <div class="off-canvas position-left" id="filters-panel" data-off-canvas>
@@ -669,6 +688,45 @@ onMounted(() => {
     </form>
     </div>
   </div>
+
+  <div v-if="currentPage === 'about'" class="grid-container" style="margin-top: 1rem;">
+  <h1>Team Members</h1>
+
+  <div class="grid-x grid-margin-x">
+
+    <div class="cell medium-4">
+      <div class="card">
+        <img src="/img/erm.png" alt="Alex urmom" />
+        <div class="card-section">
+          <h4>Alex urmom</h4>
+          <p>Tarddddd</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cell medium-4">
+      <div class="card">
+        <img src="..." alt="Alex urmom" />
+        <div class="card-section">
+          <h4>Hunter Heffy</h4>
+          <p>RRRRRRRRRRRR</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cell medium-4">
+      <div class="card">
+        <img src="..." alt="Alex urmom" />
+        <div class="card-section">
+          <h4>Ada HWang</h4>
+          <p>Role?</p>
+        </div>
+      </div>
+    </div>
+    
+
+  </div>
+</div>
 
 </template>
 
